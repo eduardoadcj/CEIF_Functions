@@ -10,7 +10,15 @@ export const autoRemove = functions.firestore
     .onWrite((change, context) => {
         
         let date: Date = new Date;
-        date.setMonth(date.getMonth() - 3);
+        let dif = date.getMonth() - 3;
+
+        if(dif < 1){
+            date.setMonth(12 - dif);
+            date.setFullYear(date.getFullYear()-1);
+        }else{
+            date.setMonth(dif);
+        }
+        
         let locacao = db.collection('locacao');
         locacao.where('dataDevolucao', '<=' , date)
         .then((snapshot: any) => {
